@@ -46,14 +46,36 @@ server.get('/projects', (_, res) => {
   return res.json(projects);
 });
 
-// TODO: PUT  /projects/:id
-// TODO: DELETE  /projects/:id
+server.put('/projects/:id', checkProjectInArray, (req, res) => {
+  const { title } = req.body;
+  const { project } = req;
+
+  const index = projects.findIndex(p => p.id === project.id);
+  project.title = title;
+
+  projects[index] = project;
+
+  return res.json(project);
+});
+
 server.delete('/projects/:id', checkProjectInArray, (req, res) => {
   const { project } = req;
 
   projects = projects.filter((p) => p.id !== project.id);
   return res.send();
 });
-// TODO: POST  /projects/:id/tasks
+
+server.post('/projects/:id/tasks', checkProjectInArray, (req, res) => {
+  const { title } = req.body;
+  const { project } = req;
+
+  const index = projects.findIndex(p => p.id === project.id);
+  project.tasks.push(title);
+
+  projects[index] = project;
+
+  return res.json(project);
+
+})
 
 server.listen(3000);
